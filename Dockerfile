@@ -6,9 +6,19 @@ FROM eclipse-temurin:21-jre AS runtime
 ARG PHOTON_VERSION=0.7.4
 ENV PHOTON_VERSION=${PHOTON_VERSION}
 
-# Removed invalid 'md5sum' package and duplicate 'coreutils'; bash removed (coreutils provides md5sum)
+# Packages:
+# - coreutils provides md5sum
+# - keep bash explicitly (entrypoint & scripts use bash)
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl zstd ca-certificates coreutils cron jq procps findutils \
+    curl \
+    zstd \
+    ca-certificates \
+    bash \
+    coreutils \
+    cron \
+    jq \
+    procps \
+    findutils \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/photon
