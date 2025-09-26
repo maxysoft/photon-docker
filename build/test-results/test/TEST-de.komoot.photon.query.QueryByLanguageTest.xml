@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.komoot.photon.query.QueryByLanguageTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2025-09-26T22:02:28.356Z" hostname="runnervm3ublj" time="4.302">
+  <properties/>
+  <testcase name="[1] STREET" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.364"/>
+  <testcase name="[2] LOCALITY" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.332"/>
+  <testcase name="[3] DISTRICT" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.353"/>
+  <testcase name="[4] CITY" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.406"/>
+  <testcase name="[5] STATE" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.381"/>
+  <testcase name="[6] COUNTRY" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.373"/>
+  <testcase name="queryAltNames()" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.383"/>
+  <testcase name="queryNonStandardLanguages()" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.393"/>
+  <testcase name="[1] default" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.49"/>
+  <testcase name="[2] de" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.378"/>
+  <testcase name="[3] en" classname="de.komoot.photon.query.QueryByLanguageTest" time="0.44"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

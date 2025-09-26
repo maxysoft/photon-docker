@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.komoot.photon.DatabasePropertiesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-09-26T22:01:57.994Z" hostname="runnervm3ublj" time="0.64">
+  <properties/>
+  <testcase name="testSetLanguages()" classname="de.komoot.photon.DatabasePropertiesTest" time="0.637"/>
+  <testcase name="testRestrictLanguagesAlreadySet()" classname="de.komoot.photon.DatabasePropertiesTest" time="0.001"/>
+  <testcase name="testRestrictLanguagesUnsetLanguages()" classname="de.komoot.photon.DatabasePropertiesTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

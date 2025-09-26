@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.komoot.photon.query.QueryRelevanceTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2025-09-26T22:02:34.893Z" hostname="runnervm3ublj" time="2.743">
+  <properties/>
+  <testcase name="[1] Ham" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.453"/>
+  <testcase name="[2] Hamm" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.336"/>
+  <testcase name="[3] Hamburg" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.37"/>
+  <testcase name="testLocationPreferenceForHigherImportance()" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.433"/>
+  <testcase name="testPartialNameWithImportanceOverFullName()" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.364"/>
+  <testcase name="testRelevanceByImportance()" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.388"/>
+  <testcase name="testFullNameOverPartialName()" classname="de.komoot.photon.query.QueryRelevanceTest" time="0.395"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

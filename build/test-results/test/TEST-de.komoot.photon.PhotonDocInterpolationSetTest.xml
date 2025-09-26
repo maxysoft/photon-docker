@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="de.komoot.photon.PhotonDocInterpolationSetTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2025-09-26T22:01:58.828Z" hostname="runnervm3ublj" time="1.011">
+  <properties/>
+  <testcase name="testSinglePointInterpolation()" classname="de.komoot.photon.PhotonDocInterpolationSetTest" time="0.998"/>
+  <testcase name="testBadInterpolationLargeMulti()" classname="de.komoot.photon.PhotonDocInterpolationSetTest" time="0.002"/>
+  <testcase name="testBadInterpolationReverse()" classname="de.komoot.photon.PhotonDocInterpolationSetTest" time="0.001"/>
+  <testcase name="testSingleStepInterpolation()" classname="de.komoot.photon.PhotonDocInterpolationSetTest" time="0.007"/>
+  <testcase name="testTwoStepInterpolation()" classname="de.komoot.photon.PhotonDocInterpolationSetTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
