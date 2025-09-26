@@ -1,0 +1,50 @@
+# Simple Dockerfile using pre-built JAR for Photon with multi-country support
+FROM openjdk:11-jre-slim
+
+# Install required packages for downloading and extracting data
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    bzip2 \
+    pbzip2 \
+    jq \
+    bash \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create photon user and directories
+RUN useradd -m -s /bin/bash photon && \
+    mkdir -p /photon/data /photon/dumps /photon/logs && \
+    chown -R photon:photon /photon
+
+# Copy the pre-built JAR
+COPY target/photon-*.jar /photon/photon.jar
+
+# Copy scripts
+COPY docker/entrypoint.sh /photon/entrypoint.sh
+COPY docker/download-data.sh /photon/download-data.sh
+
+# Make scripts executable
+RUN chmod +x /photon/entrypoint.sh /photon/download-data.sh
+
+# Set working directory
+WORKDIR /photon
+
+# Switch to photon user
+USER photon
+
+# Expose port
+EXPOSE 2322
+
+# Set default environment variables
+ENV PHOTON_COUNTRIES=""
+ENV PHOTON_LANGUAGES="en,de,fr,it"
+ENV PHOTON_DATA_DIR="/photon/data"
+ENV PHOTON_LISTEN_IP="0.0.0.0"
+ENV PHOTON_LISTEN_PORT="2322"
+ENV PHOTON_CORS_ANY="false"
+ENV PHOTON_UPDATE_API="false"
+ENV PHOTON_MAX_RESULTS="50"
+ENV PHOTON_AUTO_DOWNLOAD="true"
+
+# Default command
+ENTRYPOINT ["/photon/entrypoint.sh"]

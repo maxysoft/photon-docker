@@ -1,0 +1,34 @@
+version: '3.8'
+
+# Simple single-country deployment example
+services:
+  photon:
+    build: .
+    container_name: photon-simple
+    ports:
+      - "2322:2322"
+    environment:
+      # Set to your desired country codes (comma-separated)
+      # Leave empty for world-wide data
+      - PHOTON_COUNTRIES=de
+      - PHOTON_LANGUAGES=de,en
+      - PHOTON_CORS_ANY=true
+      - PHOTON_MAX_RESULTS=50
+      # Adjust memory based on your needs
+      - JAVA_OPTS=-Xmx2g
+    volumes:
+      - photon-data:/photon/data
+      - photon-dumps:/photon/dumps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+volumes:
+  photon-data:
+    driver: local
+  photon-dumps:
+    driver: local

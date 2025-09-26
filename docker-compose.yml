@@ -1,0 +1,134 @@
+version: '3.8'
+
+services:
+  # Example: World-wide Photon instance
+  photon-world:
+    build: .
+    container_name: photon-world
+    ports:
+      - "2322:2322"
+    environment:
+      - PHOTON_COUNTRIES=
+      - PHOTON_LANGUAGES=en,de,fr,it
+      - PHOTON_CORS_ANY=true
+      - PHOTON_MAX_RESULTS=50
+      - JAVA_OPTS=-Xmx4g
+    volumes:
+      - photon-world-data:/photon/data
+      - photon-world-dumps:/photon/dumps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 300s
+
+  # Example: European countries Photon instance
+  photon-europe:
+    build: .
+    container_name: photon-europe
+    ports:
+      - "2323:2322"
+    environment:
+      - PHOTON_COUNTRIES=de,fr,it,es,nl,be,at,ch,pl,cz
+      - PHOTON_LANGUAGES=en,de,fr,it,es,nl,pl,cs
+      - PHOTON_CORS_ANY=true
+      - PHOTON_MAX_RESULTS=50
+      - JAVA_OPTS=-Xmx2g
+    volumes:
+      - photon-europe-data:/photon/data
+      - photon-europe-dumps:/photon/dumps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  # Example: North America Photon instance
+  photon-north-america:
+    build: .
+    container_name: photon-north-america
+    ports:
+      - "2324:2322"
+    environment:
+      - PHOTON_COUNTRIES=us,ca,mx
+      - PHOTON_LANGUAGES=en,es,fr
+      - PHOTON_CORS_ANY=true
+      - PHOTON_MAX_RESULTS=50
+      - JAVA_OPTS=-Xmx2g
+    volumes:
+      - photon-north-america-data:/photon/data
+      - photon-north-america-dumps:/photon/dumps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s
+
+  # Example: Single country (Germany) instance
+  photon-germany:
+    build: .
+    container_name: photon-germany
+    ports:
+      - "2325:2322"
+    environment:
+      - PHOTON_COUNTRIES=de
+      - PHOTON_LANGUAGES=de,en
+      - PHOTON_CORS_ANY=true
+      - PHOTON_MAX_RESULTS=50
+      - PHOTON_UPDATE_API=true
+      - JAVA_OPTS=-Xmx1g
+    volumes:
+      - photon-germany-data:/photon/data
+      - photon-germany-dumps:/photon/dumps
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+
+  # Nginx reverse proxy for load balancing (optional)
+  nginx:
+    image: nginx:alpine
+    container_name: photon-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - photon-world
+      - photon-europe
+      - photon-north-america
+      - photon-germany
+    restart: unless-stopped
+    profiles:
+      - with-proxy
+
+volumes:
+  photon-world-data:
+    driver: local
+  photon-world-dumps:
+    driver: local
+  photon-europe-data:
+    driver: local
+  photon-europe-dumps:
+    driver: local
+  photon-north-america-data:
+    driver: local
+  photon-north-america-dumps:
+    driver: local
+  photon-germany-data:
+    driver: local
+  photon-germany-dumps:
+    driver: local
+
+networks:
+  default:
+    name: photon-network

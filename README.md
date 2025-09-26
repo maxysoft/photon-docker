@@ -39,6 +39,32 @@ the server. See instructions below.*
 
 # Installation and Usage
 
+## Docker Multi-Country Deployment
+
+**NEW**: Photon now supports Docker deployment with multi-country configurations! This is the **easiest way** to get started with Photon.
+
+### Quick Docker Start
+
+For a single country (e.g., Germany):
+```bash
+git clone <repository-url>
+cd photon-docker
+docker-compose -f docker-compose.simple.yml up -d
+```
+
+For multi-country deployment:
+```bash
+docker-compose up -d
+```
+
+This will automatically:
+- Download official per-country Photon JSONL dumps
+- Import data for specified countries
+- Start geocoding services on different ports
+- Provide health monitoring and load balancing
+
+**See [DOCKER.md](DOCKER.md) for comprehensive Docker deployment documentation.**
+
 ## photon ElasticSearch vs. photon OpenSearch
 
 photon was originally built on ElasticSearch. For technical reasons, we are
