@@ -20,10 +20,12 @@ MAP[RS]="europe|serbia"
 MAP[SI]="europe|slovenia"
 MAP[SE]="europe|sweden"
 
-IFS=',' read -r -a codes <<< "
-${PHOTON_COUNTRIES:?PHOTON_COUNTRIES required}"
+IFS=',' read -r -a codes <<< "${PHOTON_COUNTRIES:?PHOTON_COUNTRIES required}"
 
-for code in "${codes[@]}"; do
+urls=()
+for raw in "${codes[@]}"; do
+  code=$(echo "$raw" | tr -d '[:space:]')
+  [ -z "$code" ] && continue
   code_u=$(echo "$code" | tr '[:lower:]' '[:upper:]')
   entry="${MAP[$code_u]:-}"
   if [ -z "$entry" ]; then
@@ -32,5 +34,12 @@ for code in "${codes[@]}"; do
   fi
   continent="${entry%%|*}"
   slug="${entry##*|}"
-  echo "${PHOTON_DUMP_BASE}/${continent}/${slug}/photon-dump-${slug}-${DUMP_VERSION_TAG}.jsonl.zst"
+  urls+=("${PHOTON_DUMP_BASE}/${continent}/${slug}/photon-dump-${slug}-${DUMP_VERSION_TAG}.jsonl.zst")
 done
+
+if [ "${#urls[@]}" -eq 0 ]; then
+  echo "ERROR: No valid country codes resolved from PHOTON_COUNTRIES='${PHOTON_COUNTRIES}'" >&2
+  exit 1
+fi
+
+printf '%s\n' "${urls[@]}"
