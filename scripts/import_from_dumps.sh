@@ -106,7 +106,7 @@ cleanup_retention "${PHOTON_DATA_DIR}/dumps" "combined-*.jsonl" "${RETENTION_DUM
 
 cat > "${PHOTON_DATA_DIR}/.current_build" <<EOF
 build_id=${BUILD_ID}
-ountries=${PHOTON_COUNTRIES}
+countries=${PHOTON_COUNTRIES}
 photon_version=${PHOTON_VERSION}
 generated_utc=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
 checksum_algo=${CHECKSUM_ALGO}
