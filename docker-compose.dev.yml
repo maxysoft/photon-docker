@@ -1,0 +1,61 @@
+version: '3.8'
+
+# Development environment with fast startup
+# Uses small country datasets for quick testing
+services:
+  photon-dev-small:
+    build: .
+    container_name: photon-dev-small
+    ports:
+      - "2322:2322"
+    environment:
+      # Small country for fast download and import
+      - PHOTON_COUNTRIES=lu  # Luxembourg (very small dataset)
+      - PHOTON_LANGUAGES=de,fr,en
+      - PHOTON_CORS_ANY=true
+      - PHOTON_MAX_RESULTS=50
+      - JAVA_OPTS=-Xmx512m  # Minimal memory for development
+    volumes:
+      - photon-dev-data:/photon/data
+      - photon-dev-dumps:/photon/dumps
+    restart: "no"  # Don't auto-restart in dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s  # Shorter start period for small dataset
+
+  photon-dev-medium:
+    build: .
+    container_name: photon-dev-medium
+    ports:
+      - "2323:2322"
+    environment:
+      # Medium-sized country for more comprehensive testing
+      - PHOTON_COUNTRIES=nl  # Netherlands (medium dataset)
+      - PHOTON_LANGUAGES=nl,en,de
+      - PHOTON_CORS_ANY=true
+      - PHOTON_UPDATE_API=true  # Enable for testing updates
+      - PHOTON_MAX_RESULTS=50
+      - JAVA_OPTS=-Xmx1g
+    volumes:
+      - photon-dev-medium-data:/photon/data
+      - photon-dev-medium-dumps:/photon/dumps
+    restart: "no"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2322/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  photon-dev-data:
+    driver: local
+  photon-dev-dumps:
+    driver: local
+  photon-dev-medium-data:
+    driver: local
+  photon-dev-medium-dumps:
+    driver: local

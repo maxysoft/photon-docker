@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Multi-Release: true
-Main-Class: de.komoot.photon.App
-

@@ -1,0 +1,42 @@
+# Build artifacts
+target/
+build/
+.gradle/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Version control
+.git/
+.gitignore
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Test data and temporary files
+photon_data/
+*.tmp
+*.log
+
+# Docker files (except the ones we need)
+docker-compose.override.yml
+.dockerignore
+
+# Node modules if any
+node_modules/
+
+# Other temporary files
+*.swp
+*.swo
+*~
