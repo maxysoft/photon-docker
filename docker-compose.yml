@@ -1,0 +1,88 @@
+version: "3.9"
+
+services:
+  photon:
+    build:
+      context: .
+      args:
+        PHOTON_VERSION: "${PHOTON_VERSION:-0.7.4}"
+    image: photon-multicountry:latest
+    container_name: photon
+    environment:
+      PHOTON_COUNTRIES: "${PHOTON_COUNTRIES}"
+      PHOTON_JAVA_OPTS: "${PHOTON_JAVA_OPTS:- -Xms4g -Xmx8g}"
+      PHOTON_RUN_ARGS: "${PHOTON_RUN_ARGS:- -listen-ip 0.0.0.0 -cors-any -max-results 50}"
+      PHOTON_IMPORT_EXTRA_ARGS: "${PHOTON_IMPORT_EXTRA_ARGS}"
+      PHOTON_KEEP_COMBINED_JSON: "${PHOTON_KEEP_COMBINED_JSON:-1}"
+      FORCE_REIMPORT: "${FORCE_REIMPORT:-0}"
+      RETENTION_BUILDS: "${RETENTION_BUILDS:-1}"
+      RETENTION_DUMPS: "${RETENTION_DUMPS:-1}"
+      PHOTON_SERVICE_LABEL: "photon"
+      DOWNLOAD_RETRIES: "${DOWNLOAD_RETRIES:-5}"
+      DOWNLOAD_BACKOFF_SECONDS: "${DOWNLOAD_BACKOFF_SECONDS:-5}"
+      CHECKSUM_VERIFY: "${CHECKSUM_VERIFY:-1}"
+      CHECKSUM_RECORD: "${CHECKSUM_RECORD:-1}"
+      CHECKSUM_ALGO: "${CHECKSUM_ALGO:-md5}"
+      CHECKSUM_STRICT_FILENAMES: "${CHECKSUM_STRICT_FILENAMES:-0}"
+    volumes:
+      - photon_data:/var/lib/photon
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "bash", "-c", "curl -fsS http://localhost:2322/status | grep -q '{'" ]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    labels:
+      com.docker.compose.service: "photon"
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: photon-nginx
+    depends_on:
+      - photon
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      PHOTON_DOMAIN: "${PHOTON_DOMAIN:-photon.domain.com}"
+    ports:
+      - "80:80"
+    networks:
+      - internal
+    restart: unless-stopped
+
+  photon-rebuilder:
+    build:
+      context: .
+      args:
+        PHOTON_VERSION: "${PHOTON_VERSION:-0.7.4}"
+    image: photon-multicountry:latest
+    container_name: photon-rebuilder
+    environment:
+      PHOTON_COUNTRIES: "${PHOTON_COUNTRIES}"
+      PHOTON_KEEP_COMBINED_JSON: "${PHOTON_KEEP_COMBINED_JSON:-1}"
+      RETENTION_BUILDS: "${RETENTION_BUILDS:-1}"
+      RETENTION_DUMPS: "${RETENTION_DUMPS:-1}"
+      REBUILD_CRON: "${REBUILD_CRON:-0 3 1 * *}"
+      PHOTON_SERVICE_LABEL: "photon"
+      FORCE_REIMPORT: "1"
+      DOWNLOAD_RETRIES: "${DOWNLOAD_RETRIES:-5}"
+      DOWNLOAD_BACKOFF_SECONDS: "${DOWNLOAD_BACKOFF_SECONDS:-5}"
+      CHECKSUM_VERIFY: "${CHECKSUM_VERIFY:-1}"
+      CHECKSUM_RECORD: "${CHECKSUM_RECORD:-1}"
+      CHECKSUM_ALGO: "${CHECKSUM_ALGO:-md5}"
+      CHECKSUM_STRICT_FILENAMES: "${CHECKSUM_STRICT_FILENAMES:-0}"
+    volumes:
+      - photon_data:/var/lib/photon
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["/opt/photon/scripts/rebuilder_cron.sh"]
+    networks:
+      - internal
+    restart: unless-stopped
+
+volumes:
+  photon_data:
+
+networks:
+  internal:
+    driver: bridge
