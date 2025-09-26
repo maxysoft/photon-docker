@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-log() { printf '[%s] %s
-' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" "$*" >&2; }
+log() {
+  printf '[%s] %s\n' "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" "$*" >&2
+}
 fail() { log "ERROR: $*"; exit 1; }
-require_env() { local v="$1"; [ -n "
-${!v:-}" ] || fail "Env $v required"; }
+require_env() {
+  local v="$1"
+  [ -n "${!v:-}" ] || fail "Env $v required"
+}
 timestamp() { date -u +%Y%m%d-%H%M%S; }
 
 cleanup_retention() {
   local base_dir="$1" pattern="$2" retain="${3:-1}"
   [ -d "$base_dir" ] || return 0
-  local items; items=$(ls -1dt "$base_dir"/$pattern 2>/dev/null || true)
+  local items
+  items=$(ls -1dt "$base_dir"/$pattern 2>/dev/null || true)
   [ -n "$items" ] || return 0
   local c=0
   while read -r line; do
@@ -47,7 +51,8 @@ load_checksums_inline() {
   [ -n "$data" ] || return 0
   log "Loading inline SHA256 expectations"
   while IFS= read -r line; do
-    line="${line%%#*}"; [ -n "$line" ] || continue
+    line="${line%%#*}"
+    [ -n "$line" ] || continue
     local h f
     h=$(echo "$line" | awk '{print $1}')
     f=$(echo "$line" | awk '{print $2}')
@@ -62,7 +67,8 @@ load_checksums_remote() {
   local tmp; tmp=$(mktemp)
   curl -fsSL -o "$tmp" "$url" || fail "Cannot download checksum list"
   while IFS= read -r line; do
-    line="${line%%#*}"; [ -n "$line" ] || continue
+    line="${line%%#*}"
+    [ -n "$line" ] || continue
     local h f
     h=$(echo "$line" | awk '{print $1}')
     f=$(echo "$line" | awk '{print $2}')
@@ -75,8 +81,7 @@ load_checksums_remote() {
 init_checksums() {
   load_checksums_inline
   load_checksums_remote
-  if [ "$CHECKSUM_VERIFY" = "1" ] && [ "$CHECKSUM_ALGO" = "sha256" ] && [ "
-${#EXPECTED_HASHES[@]}" -eq 0 ]; then
+  if [ "$CHECKSUM_VERIFY" = "1" ] && [ "$CHECKSUM_ALGO" = "sha256" ] && [ "${#EXPECTED_HASHES[@]}" -eq 0 ]; then
     fail "VERIFY=1 but no SHA256 expectations loaded (ALGO=sha256)"
   fi
 }
@@ -151,6 +156,8 @@ verify_or_record_checksum() {
         log "WARN: No checksum data for $base (auto, verify=0)"
       fi
       ;;
-    *) fail "Unknown CHECKSUM_ALGO: $CHECKSUM_ALGO" ;;
+    *)
+      fail "Unknown CHECKSUM_ALGO: $CHECKSUM_ALGO"
+      ;;
   esac
 }
