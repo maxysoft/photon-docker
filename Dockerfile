@@ -34,7 +34,7 @@ RUN mkdir -p /var/lib/photon /opt/photon/scripts /var/log/photon
 
 ENV PHOTON_DATA_DIR=/var/lib/photon \
     PHOTON_JAVA_OPTS="-Xms4g -Xmx8g" \
-    PHOTON_RUN_ARGS="-listen-ip 0.0.0.0 -cors-any -max-results 50" \
+    PHOTON_RUN_ARGS="-data-dir /var/lib/photon -listen-ip 0.0.0.0 -cors-any -max-results 50" \
     PHOTON_IMPORT_EXTRA_ARGS="" \
     PHOTON_COUNTRIES="" \
     PHOTON_KEEP_COMBINED_JSON=1 \
